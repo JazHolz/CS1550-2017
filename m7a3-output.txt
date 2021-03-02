@@ -1,0 +1,226 @@
+mysql> source /Users/Kat/Downloads/create-users-alexamara.sql 
+Query OK, 0 rows affected, 5 warnings (0.01 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
++---------------+
+| USER          |
++---------------+
+| Adams         |
+| Andrews       |
+| Ashton        |
+| Crandall      |
+| Danielson     |
+| Golden        |
+| Gomez         |
+| Grinstead     |
+| James         |
+| Johnson       |
+| Kelly         |
+| Klein         |
+| Liston        |
+| Morgan        |
+| Oliver        |
+| Perez         |
+| Rodriquez     |
+| Washington    |
+| Zimmer        |
+| mysql.session |
+| mysql.sys     |
+| root          |
++---------------+
+22 rows in set (0.00 sec)
+
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create view large_slip as
+    -> select marina_num, slip_num, rental_fee, boat_name, owner_num
+    -> from marina_slip
+    -> where length = 40;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select marina_num, slip_num, rental_fee, boat_name
+    -> from large_slip
+    -> where rental_fee = 3800;
++------------+----------+------------+-------------+
+| marina_num | slip_num | rental_fee | boat_name   |
++------------+----------+------------+-------------+
+| 1          | A1       |    3800.00 | Anderson II |
+| 1          | A2       |    3800.00 | Our Toy     |
++------------+----------+------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select marina_num, slip_num, rental_fee, boat_name, owner_num
+    -> from marina_slip
+    -> where rental_fee = 3800;
++------------+----------+------------+-------------+-----------+
+| marina_num | slip_num | rental_fee | boat_name   | owner_num |
++------------+----------+------------+-------------+-----------+
+| 1          | A1       |    3800.00 | Anderson II | AN75      |
+| 1          | A2       |    3800.00 | Our Toy     | EL25      |
++------------+----------+------------+-------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> create view ray4025 as
+    -> select marina_num, slip_num, length, rental_fee, boat_name, last_name
+    -> from marina_slip, owner
+    -> where owner.owner_num = marina_slip.owner_num
+    -> and boat_type = 'Ray 4017';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from ray4025
+    -> where rental_fee < 4000;
+Empty set (0.00 sec)
+
+mysql> select marina_num, slip_num, rental_fee, boat_name, last_name from marina_slip, owner where owner.owner_num = marina_slip.owner_num and boat_type = 'Ray 4017';
+Empty set (0.00 sec)
+
+mysql> select marina_num, slip_num, rental_fee, boat_name, last_name from marina_slip, owner where owner.owner_num = marina_slip.owner_num and rental_fee < 4000;
++------------+----------+------------+--------------+-----------+
+| marina_num | slip_num | rental_fee | boat_name    | last_name |
++------------+----------+------------+--------------+-----------+
+| 1          | A1       |    3800.00 | Anderson II  | Anderson  |
+| 1          | A2       |    3800.00 | Our Toy      | Elend     |
+| 1          | A3       |    3600.00 | Escape       | Kelly     |
+| 1          | B1       |    2400.00 | Gypsy        | Juarez    |
+| 1          | B2       |    2600.00 | Anderson III | Anderson  |
+| 2          | 1        |    1800.00 | Bravo        | Adney     |
+| 2          | 2        |    1800.00 | Chinook      | Feenstra  |
+| 2          | 3        |    2000.00 | Listy        | Smeltz    |
+| 2          | 4        |    2500.00 | Mermaid      | Blake     |
++------------+----------+------------+--------------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> create view slip_fees as
+    -> select length, avg(rental_fee) as average_fee
+    -> from marina_slip
+    -> group by length
+    -> order by length;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from slip_fees
+    -> where average_fee < 3500;
++--------+-------------+
+| length | average_fee |
++--------+-------------+
+|     25 | 1866.666667 |
+|     30 | 2500.000000 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select length, avg(rental_fee) as average_fee
+    -> from marina_slip
+    -> order by length
+    -> group by length;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by length' at line 4
+mysql> grant select on marina_slip to Oliver;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant add on owner, slip_num, to Crandall, Perez;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add on owner, slip_num, to Crandall, Perez' at line 1
+mysql> grant add on (owner, slip_num) to Crandall, Perez;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add on (owner, slip_num) to Crandall, Perez' at line 1
+mysql> grant add on owner, slip_num to Crandall, Perez;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add on owner, slip_num to Crandall, Perez' at line 1
+mysql> grant add on owner to Crandall, Perez;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add on owner to Crandall, Perez' at line 1
+mysql> grand update (rental_fee) on marina_slip to Johnson, Klein;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'grand update (rental_fee) on marina_slip to Johnson, Klein' at line 1
+mysql> grant select (length, boat_name, owner_num on marina_slip to Public;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'on marina_slip to Public' at line 1
+mysql> grant insert, delete on categories to Klein;
+ERROR 1146 (42S02): Table 'alexamara_marina_group.categories' doesn't exist
+mysql> grant create index on service_request to Adams;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'index on service_request to Adams' at line 1
+mysql> grant create index on service_request to Adam;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'index on service_request to Adam' at line 1
+mysql> grant alter on marina to Klein, Adams;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant all on marina to Klein;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> revoke all from Adams;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Adams' at line 1
+mysql> create index boat_index1 on marina_slip(owner_num);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index boat_index2 on marina_slip(boat_name);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index boat_index3 on marina_slip(length, boat_name);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> drop index boat_index3 on marina_slip;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++----------------------------------+
+| Tables_in_alexamara_marina_group |
++----------------------------------+
+| MARINA                           |
+| MARINA_SLIP                      |
+| OWNER                            |
+| SERVICE_CATEGORY                 |
+| SERVICE_REQUEST                  |
+| large_slip                       |
+| ray4025                          |
+| slip_fees                        |
++----------------------------------+
+8 rows in set (0.00 sec)
+
+mysql> show columns from marina;
++------------+----------+------+-----+---------+-------+
+| Field      | Type     | Null | Key | Default | Extra |
++------------+----------+------+-----+---------+-------+
+| MARINA_NUM | char(4)  | NO   | PRI | NULL    |       |
+| NAME       | char(20) | YES  |     | NULL    |       |
+| ADDRESS    | char(15) | YES  |     | NULL    |       |
+| CITY       | char(15) | YES  |     | NULL    |       |
+| STATE      | char(2)  | YES  |     | NULL    |       |
+| ZIP        | char(5)  | YES  |     | NULL    |       |
++------------+----------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> show index from marina_slip;
++-------------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table       | Non_unique | Key_name    | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-------------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| marina_slip |          0 | PRIMARY     |            1 | SLIP_ID     | A         |          11 |     NULL | NULL   |      | BTREE      |         |               |
+| marina_slip |          1 | boat_index1 |            1 | OWNER_NUM   | A         |          10 |     NULL | NULL   | YES  | BTREE      |         |               |
+| marina_slip |          1 | boat_index2 |            1 | BOAT_NAME   | A         |          11 |     NULL | NULL   | YES  | BTREE      |         |               |
++-------------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> show grants from Kelin;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Kelin' at line 1
+mysql> show grants from Klien;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Klien' at line 1
+mysql> show grants from Klein;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Klein' at line 1
+mysql> alter table marina_slip
+    -> add foreign key(owner_num) references owner(owner_num);
+Query OK, 11 rows affected (0.05 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> exit

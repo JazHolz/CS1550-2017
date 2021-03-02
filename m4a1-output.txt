@@ -1,0 +1,160 @@
+mysql> TEE /users/Kat/desktop/m4a1-output.txt
+
+mysql> select title, type, price, paperback
+    -> from book
+    -> where type = 'FIC' and price < 8.00;
++------------------------+------+-------+-----------+
+| title                  | type | price | paperback |
++------------------------+------+-------+-----------+
+| Of Mice and Men        | FIC  |  6.95 | Yes       |
+| Nine Stories           | FIC  |  5.99 | Yes       |
+| Franny and Zooey       | FIC  |  5.99 | Yes       |
+| The Catcher in the Rye | FIC  |  5.99 | Yes       |
++------------------------+------+-------+-----------+
+4 rows in set (0.00 sec)
+
+
+
+mysql> select title, type, price, paperback
+    -> from book
+    -> where title like '%and%';
++------------------------------------------+------+-------+-----------+
+| title                                    | type | price | paperback |
++------------------------------------------+------+-------+-----------+
+| Harry Potter and the Prisoner of Azkaban | SFI  | 13.96 | No        |
+| Van Gogh and Gauguin                     | ART  | 21.00 | No        |
+| Of Mice and Men                          | FIC  |  6.95 | Yes       |
+| Band of Brothers                         | HIS  |  9.60 | Yes       |
+| Franny and Zooey                         | FIC  |  5.99 | Yes       |
+| Harry Potter and the Goblet of Fire      | SFI  | 18.16 | No        |
++------------------------------------------+------+-------+-----------+
+6 rows in set (0.00 sec)
+
+
+
+mysql> select book_code, branch_num, on_hand
+    -> from inventory
+    -> where branch_num = '1' and on_hand > 1;
++-----------+------------+---------+
+| book_code | branch_num | on_hand |
++-----------+------------+---------+
+| 0180      | 1          | 2       |
+| 2226      | 1          | 3       |
+| 2908      | 1          | 3       |
+| 3350      | 1          | 2       |
+| 8720      | 1          | 3       |
+| 9611      | 1          | 2       |
+| 9701      | 1          | 2       |
+| 9931      | 1          | 2       |
++-----------+------------+---------+
+8 rows in set (0.00 sec)
+
+
+
+mysql> select boat_name, boat_type
+    -> from marina_slip
+    -> where boat_type like '%Dolphin%';
++-----------+------------+
+| boat_name | boat_type  |
++-----------+------------+
+| Axxon II  | Dolphin 40 |
+| Gypsy     | Dolphin 28 |
+| Bravo     | Dolphin 25 |
+| Chinook   | Dolphin 22 |
+| Listy     | Dolphin 25 |
+| Mermaid   | Dolphin 28 |
++-----------+------------+
+6 rows in set (0.00 sec)
+
+
+
+mysql> select boat_name, marina_num, rental_fee
+    -> from marina_slip
+    -> where marina_num = 1
+    -> order by rental_fee desc;
++--------------+------------+------------+
+| boat_name    | marina_num | rental_fee |
++--------------+------------+------------+
+| Anderson II  | 1          |    3800.00 |
+| Our Toy      | 1          |    3800.00 |
+| Escape       | 1          |    3600.00 |
+| Anderson III | 1          |    2600.00 |
+| Gypsy        | 1          |    2400.00 |
++--------------+------------+------------+
+5 rows in set (0.00 sec)
+
+
+
+mysql> select last_name, first_name, city
+    -> from owner
+    -> where city = 'Glander Bay' or city = 'Bay Shores';
++-----------+----------------+-------------+
+| last_name | first_name     | city        |
++-----------+----------------+-------------+
+| Anderson  | Bill           | Glander Bay |
+| Smeltz    | Becky and Dave | Glander Bay |
+| Trent     | Ashton         | Bay Shores  |
++-----------+----------------+-------------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> select 
+    -> customer_name, 
+    -> customer.rep_num, 
+    -> rep.first_name
+    -> from customer, rep
+    -> where customer.rep_num = 20 
+    -> and customer.rep_num = rep.rep_num;
++--------------------------+---------+------------+
+| customer_name            | rep_num | first_name |
++--------------------------+---------+------------+
+| Al's Appliance and Sport | 20      | Valerie    |
+| Kline's                  | 20      | Valerie    |
+| All Season               | 20      | Valerie    |
++--------------------------+---------+------------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> select 
+    -> part_num,
+    -> description,
+    -> on_hand,
+    -> warehouse
+    -> from part
+    -> where warehouse = 3
+    -> order by on_hand desc;
++----------+----------------+---------+-----------+
+| part_num | description    | on_hand | warehouse |
++----------+----------------+---------+-----------+
+| AT94     | Iron           | 50      | 3         |
+| FD21     | Stand Mixer    | 22      | 3         |
+| DL71     | Cordless Drill | 21      | 3         |
+| DW11     | Washer         | 12      | 3         |
+| KT03     | Dishwasher     | 08      | 3         |
++----------+----------------+---------+-----------+
+5 rows in set (0.00 sec)
+
+
+
+
+mysql> select 
+    -> part_num,
+    -> description,
+    -> on_hand,
+    -> warehouse
+    -> from part
+    -> where part_num like '%3' or part_num like '%2';
++----------+----------------+---------+-----------+
+| part_num | description    | on_hand | warehouse |
++----------+----------------+---------+-----------+
+| CD52     | Microwave Oven | 32      | 1         |
+| DR93     | Gas Range      | 8       | 2         |
+| KL62     | Dryer          | 12      | 1         |
+| KT03     | Dishwasher     | 08      | 3         |
++----------+----------------+---------+-----------+
+4 rows in set (0.00 sec)
+

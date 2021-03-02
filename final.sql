@@ -1,0 +1,256 @@
+DROP DATABASE IF EXISTS TOP_TEN_SONGS;
+
+CREATE DATABASE TOP_TEN_SONGS;
+
+USE TOP_TEN_SONGS;
+
+CREATE TABLE ARTIST
+(
+ARTIST_ID INT(5) PRIMARY KEY AUTO_INCREMENT,
+ARTIST_FIRST_NAME VARCHAR(20),
+ARTIST_LAST_NAME VARCHAR(20),
+NICKNAME VARCHAR(20)
+);
+
+CREATE TABLE SONG
+(
+SONG_ID INT(5) PRIMARY KEY AUTO_INCREMENT,
+SONG_NAME VARCHAR(20),
+YOUTUBE_LINK VARCHAR(50),
+YEAR INT(4),
+LENGTH TIME,
+SONG_DESCRIPTION VARCHAR(100),
+SONG_RANK INT(5),
+ARTIST_ID INT(5) NOT NULL,
+ALBUM_ID INT(5) NOT NULL
+);
+
+CREATE TABLE ALBUM
+(
+ALBUM_ID INT(5) PRIMARY KEY AUTO_INCREMENT,
+ALBUM_NAME VARCHAR(20),
+ALBUM_DESCRIPTION VARCHAR(150),
+YEAR INT(4),
+ARTIST_ID INT(5) NOT NULL
+);
+
+SHOW COLUMNS FROM ARTIST;
+
+SHOW COLUMNS FROM ALBUM;
+
+SHOW COLUMNS FROM SONG;
+
+SHOW TABLES;
+
+INSERT INTO ARTIST VALUES (1, 'Charles Otto','Puth Jr.','Charlie Puth');
+
+INSERT INTO ARTIST VALUES (2,'Edward', 'Christopher', 'Ed Sheeran');
+
+INSERT INTO ARTIST VALUES (3,'Justin', 'Drew', 'Justin Bieber');
+
+INSERT INTO ARTIST VALUES (4,'Adam','Levine','Maroon 5');
+
+INSERT INTO ARTIST VALUES (5,'Hailee Caribe', 'Steinfeld', 'Hailee Steinfeld');
+
+INSERT INTO ARTIST VALUES (6,'Dua','Lipa','Dua Lipa');
+
+INSERT INTO ARTIST VALUES (7,'Sir Robert Bryson','Hall II','Logic');
+
+INSERT INTO ARTIST VALUES (8,'Karla Camila','Cabello Estrabao','Camila Cabello');
+
+INSERT INTO ALBUM VALUES (1,'VoiceNotes ', "Sophomore Studio Album of American Songwriter and Producer", 2018,1);
+
+INSERT INTO ALBUM VALUES (2,'Divide', "% Third Studio Album by English Songwiter", 2017, 2);
+
+INSERT INTO ALBUM VALUES (3,'Daddy K - The Mix 11', "Universal Music Digital Luxembourg", 2017, 3);
+
+INSERT INTO ALBUM VALUES (4,'Red Pill Blues', "Red Pill Blues is the sixth studio album by American pop rock band", 2017, 4);
+
+INSERT INTO ALBUM VALUES (5,'Haiz', "Haiz is the debut extended play (EP) by American actress and singer", 2017, 5);
+
+INSERT INTO ALBUM VALUES (6,'SINGLE', "Singles are dropped by Artists with no Album", 2017, 5);
+
+INSERT INTO ALBUM VALUES (7,'Dua Lipa', "The lyrical themes revolve around her personal views of love, rising above, sex, and self-empowerment", 2017, 6);
+
+INSERT INTO ALBUM VALUES (8,'Everybody', "The production on the album was handled by 6ix and Logic, among others", 2017, 7);
+
+INSERT INTO ALBUM VALUES (9,'SINGLE', "Singles are dropped by Artists with no Album", 2017, 8);
+
+INSERT INTO SONG VALUES (1, 'Let me go', 'https://www.youtube.com/watch?v=BQ_0QLL2gqI', 2017, '3:02', 'Telling a ex-partner to move on and that someone will love them.', '4', 5, 5);
+
+INSERT INTO SONG VALUES (2, 'Happier', 'https://www.youtube.com/watch?v=8TpcBDJZsJA', 2017, '3:27', 'Telling a ex-partner that if they are happy moving on they are too.', '2', 2, 2);
+
+INSERT INTO SONG VALUES (3, 'Friends', 'https://www.youtube.com/watch?v=-XwulK424lE', 2017, '3:08', 'Staying friends with a ex-partner.', '3', 3, 3);
+
+INSERT INTO SONG VALUES (4, 'What Lovers Do', 'https://www.youtube.com/watch?v=3NmGGGlHpxQ', 2017, '3:15', 'I\'m sure the Title does the song justice.', '1', 4, 4);
+
+INSERT INTO SONG VALUES (5, 'Attention', 'https://www.youtube.com/watch?v=nfs8NYg7yQM', 2018, '3:51', 'About a woman playing with a mans heart.', '9', 1, 1);
+
+INSERT INTO SONG VALUES (6, 'Most Girls', 'https://www.youtube.com/watch?v=qBB_QOZNEdc', 2017, '3:57', 'It\'s a song talking about who Most Girls are.', '8', 5, 6);
+
+INSERT INTO SONG VALUES (7, 'New Rules', 'https://www.youtube.com/watch?v=k2qgadSvNyU', 2017, '3:57', 'A good song about staying away from your ex-partner.', '6', 6, 7);
+
+INSERT INTO SONG VALUES (8, '1-800-273-8255', 'https://www.youtube.com/watch?v=Kb24RrHIbFk', 2017, '6:59', 'Suicide Prevention Hotline, enough said.', '5', 7, 8);
+
+INSERT INTO SONG VALUES (9, 'Havana', 'https://www.youtube.com/watch?v=HCjNJDNzw8Y', 2018, '3:36', 'A women who left half of her heart behind.', '7', 8, 9);
+
+INSERT INTO SONG VALUES (10, 'Galaway Girl', 'https://www.youtube.com/watch?v=87gWaABqGYs', 2017, '3:10', 'Because it\'s Ed Sheeran.' , '10', 2, 2);
+
+SELECT * FROM ARTIST;
+
+SELECT * FROM ALBUM;
+
+SELECT * FROM SONG;
+
+CREATE VIEW TOP_TEN AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  SONG.SONG_RANK,
+  SONG.LENGTH,
+  SONG.YOUTUBE_LINK,
+  ALBUM.ALBUM_NAME,
+  ALBUM.YEAR
+  FROM ALBUM
+    JOIN SONG ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+  WHERE ALBUM.ARTIST_ID = SONG.ARTIST_ID
+  ORDER BY SONG.SONG_RANK
+);
+
+CREATE VIEW TOP_FIVE AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  SONG.SONG_RANK,
+  SONG.LENGTH,
+  SONG.YOUTUBE_LINK,
+  ALBUM.ALBUM_NAME,
+  ALBUM.YEAR
+  FROM ALBUM
+    JOIN SONG ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+  WHERE ALBUM.YEAR = SONG.YEAR
+  AND SONG.SONG_RANK <=5
+  ORDER BY SONG.SONG_RANK
+
+);
+
+CREATE VIEW WORST_FIVE AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  SONG.SONG_RANK,
+  SONG.LENGTH,
+  SONG.YOUTUBE_LINK,
+  ALBUM.ALBUM_NAME,
+  ALBUM.YEAR
+  FROM ALBUM
+    JOIN SONG ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+  WHERE SONG.SONG_RANK >=5
+  ORDER BY SONG.SONG_RANK DESC
+);
+
+CREATE VIEW ALBUMS AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  ALBUM.ALBUM_NAME,
+  ALBUM.YEAR
+  FROM ALBUM
+    JOIN SONG ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+);
+
+CREATE VIEW ARTISTS AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  ARTIST.NICKNAME,
+  ALBUM.ALBUM_NAME
+  FROM ARTIST
+    JOIN SONG ON ARTIST.ARTIST_ID = SONG.ARTIST_ID
+    JOIN ALBUM ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+);
+
+CREATE VIEW TOTAL_RUN_TIME AS
+(
+  SELECT
+  SUM(SONG.LENGTH) AS TOTAL_RUN_TIME
+  FROM SONG
+);
+
+CREATE VIEW LONGEST_SONG_SHORTEST_SONG AS
+(
+  SELECT
+  SONG.SONG_NAME,
+  ALBUM.ALBUM_NAME,
+  CONCAT(ARTIST.ARTIST_FIRST_NAME, ", ", ARTIST.ARTIST_LAST_NAME) AS ARTIST_NAME,
+  MIN(SONG.LENGTH) AS LENGTH,
+  SONG.YOUTUBE_LINK
+  FROM SONG
+    JOIN ARTIST ON ARTIST.ARTIST_ID = SONG.ARTIST_ID
+    JOIN ALBUM ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+    AND ALBUM.YEAR = SONG.YEAR
+  WHERE SONG.LENGTH = (SELECT MIN(SONG.LENGTH) FROM SONG)
+)
+  UNION
+  (
+    SELECT
+    SONG.SONG_NAME,
+    ALBUM.ALBUM_NAME,
+    CONCAT(ARTIST.ARTIST_FIRST_NAME, ", ",ARTIST.ARTIST_LAST_NAME) AS ARTIST_NAME,
+    MAX(SONG.LENGTH),
+    SONG.YOUTUBE_LINK
+    FROM SONG
+      JOIN ARTIST ON ARTIST.ARTIST_ID = SONG.ARTIST_ID
+      JOIN ALBUM ON ALBUM.ALBUM_ID = SONG.ALBUM_ID
+      AND ALBUM.YEAR = SONG.YEAR
+    WHERE SONG.LENGTH = (SELECT MAX(SONG.LENGTH) FROM SONG
+  )
+);
+
+
+SELECT * FROM TOP_TEN;
+
+SELECT * FROM TOP_FIVE;
+
+SELECT * FROM WORST_FIVE;
+
+SELECT * FROM ALBUMS;
+
+SELECT * FROM ARTISTS;
+
+SELECT * FROM TOTAL_RUN_TIME;
+
+SELECT * FROM LONGEST_SONG_SHORTEST_SONG;
+
+
+CREATE USER "Lars" IDENTIFIED BY "password";
+
+CREATE USER "James" IDENTIFIED BY "password";
+
+CREATE USER "Robert" IDENTIFIED BY "password";
+
+CREATE USER "Kirk" IDENTIFIED BY "password";
+
+
+GRANT ALL ON TOP_TEN_SONGS.* TO 'Lars';
+
+GRANT SELECT ON VIEW.* TO 'James';
+
+GRANT SELECT ON TOP_TEN_SONGS.TOP_TEN TO 'Robert';
+
+GRANT SELECT ON TOP_TEN_SONGS.TOP_FIVE TO 'Robert';
+
+GRANT SELECT ON TOP_TEN_SONGS.WORST_FIVE TO 'Robert';
+
+GRANT SELECT ON TOP_TEN_SONGS.ALBUMS TO 'Kirk';
+
+GRANT SELECT ON TOP_TEN_SONGS.ARTISTS TO 'Kirk';
+
+GRANT SELECT ON TOP_TEN_SONGS.TOTAL_RUN_TIME TO 'Kirk';
+
+GRANT SELECT ON TOP_TEN_SONGS.LONGEST_SONG_SHORTEST_SONG TO 'Kirk';

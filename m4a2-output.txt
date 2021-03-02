@@ -1,0 +1,210 @@
+
+mysql> TEE /users/Kat/desktop/m4a2-output.txt
+
+mysql> use henry_books;
+
+
+mysql> select 
+    -> publisher.publisher_code as 'Publisher Codes', 
+    -> count(*) as 'Number of Books'
+    -> from publisher, book
+    -> where publisher.publisher_code = book.publisher_code
+    -> group by publisher.publisher_code;
++-----------------+-----------------+
+| Publisher Codes | Number of Books |
++-----------------+-----------------+
+| BA              |               1 |
+| BP              |               1 |
+| BY              |               1 |
+| CT              |               1 |
+| FA              |               1 |
+| FS              |               1 |
+| HC              |               1 |
+| JP              |               3 |
+| LB              |               3 |
+| PE              |               4 |
+| PL              |               3 |
+| PU              |               1 |
+| RH              |               1 |
+| SC              |               2 |
+| SS              |               1 |
+| ST              |               2 |
+| TA              |               1 |
+| TB              |               1 |
+| TO              |               1 |
+| VB              |               2 |
+| WP              |               1 |
++-----------------+-----------------+
+21 rows in set (0.00 sec)
+
+
+
+
+
+mysql> select 
+    -> publisher.publisher_code as 'Publisher Codes', 
+    -> count(*) as 'Number of Books'
+    -> from publisher, book
+    -> where publisher.publisher_code = book.publisher_code 
+    -> group by publisher.publisher_code;
++-----------------+-----------------+
+| Publisher Codes | Number of Books |
++-----------------+-----------------+
+| BA              |               1 |
+| BP              |               1 |
+| BY              |               1 |
+| CT              |               1 |
+| FA              |               1 |
+| FS              |               1 |
+| HC              |               1 |
+| JP              |               3 |
+| LB              |               3 |
+| PE              |               4 |
+| PL              |               3 |
+| PU              |               1 |
+| RH              |               1 |
+| SC              |               2 |
+| SS              |               1 |
+| ST              |               2 |
+| TA              |               1 |
+| TB              |               1 |
+| TO              |               1 |
+| VB              |               2 |
+| WP              |               1 |
++-----------------+-----------------+
+21 rows in set (0.00 sec)
+
+
+
+
+
+mysql> select 
+    -> paperback as 'Paperbacks', 
+    -> avg(price) as 'Price (Average)'
+    -> from book
+    -> group by paperback;
++------------+-----------------+
+| Paperbacks | Price (Average) |
++------------+-----------------+
+| N          |       19.744000 |
+| Y          |       10.664348 |
++------------+-----------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+mysql> use alexamara_marina_group;
+
+
+mysql> select 
+    -> marina_slip.marina_num as 'Marina Number', 
+    -> count(*) as 'Number of Boats'
+    -> from marina, marina_slip
+    -> where marina.marina_num = marina_slip.marina_num
+    -> group by marina.marina_num;
++---------------+-----------------+
+| Marina Number | Number of Boats |
++---------------+-----------------+
+| 1             |               5 |
+| 2             |               6 |
++---------------+-----------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+mysql> select 
+    -> marina_num as 'Marina Number', 
+    -> sum(rental_fee) as 'Total Cost of Rent'
+    -> from marina_slip
+    -> group by marina_num;
++---------------+--------------------+
+| Marina Number | Total Cost of Rent |
++---------------+--------------------+
+| 1             |           16200.00 |
+| 2             |           16500.00 |
++---------------+--------------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+mysql> select 
+    -> marina_num as 'Marina Number', 
+    -> max(rental_fee) as 'Maximum Rental Fee', 
+    -> min(rental_fee) as 'Minimum Rental Fee'
+    -> from marina_slip
+    -> group by marina_num;
++---------------+--------------------+--------------------+
+| Marina Number | Maximum Rental Fee | Minimum Rental Fee |
++---------------+--------------------+--------------------+
+| 1             |            3800.00 |            2400.00 |
+| 2             |            4200.00 |            1800.00 |
++---------------+--------------------+--------------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+mysql> use premiere;
+
+
+
+
+mysql> select 
+    -> sum(commission) as 'Total Commission'
+    -> from rep;
++------------------+
+| Total Commission |
++------------------+
+|         83245.50 |
++------------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+mysql> select 
+    -> customer.rep_num as 'Representatives Number', 
+    -> count(*) as 'Customers Number'
+    -> from rep, customer
+    -> where customer.rep_num = rep.rep_num
+    -> group by rep. rep_num;
++------------------------+------------------+
+| Representatives Number | Customers Number |
++------------------------+------------------+
+| 20                     |                3 |
+| 35                     |                4 |
+| 65                     |                3 |
++------------------------+------------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+mysql> select 
+    -> class, 
+    -> count(*) on_hand
+    -> from part
+    -> group by class;
++-------+---------+
+| class | on_hand |
++-------+---------+
+| AP    |       5 |
+| HW    |       3 |
+| SG    |       2 |
++-------+---------+
+3 rows in set (0.00 sec)
+

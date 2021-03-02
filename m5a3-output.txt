@@ -1,0 +1,305 @@
+mysql> use premiere;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select 
+    -> orders.order_num,
+    -> orders.order_date,
+    -> orders.customer_num,
+    -> order_line.part_num,
+    -> order_line.num_ordered,
+    -> order_line.quoted_price
+    -> from orders
+    ->  join order_line on orders.order_num = order_line.order_num;
++-----------+------------+--------------+----------+-------------+--------------+
+| order_num | order_date | customer_num | part_num | num_ordered | quoted_price |
++-----------+------------+--------------+----------+-------------+--------------+
+| 21608     | 2007-10-20 | 148          | AT94     |          11 |        21.95 |
+| 21610     | 2007-10-20 | 356          | DR93     |           1 |       495.00 |
+| 21610     | 2007-10-20 | 356          | DW11     |           1 |       399.99 |
+| 21613     | 2007-10-21 | 408          | KL62     |           4 |       329.95 |
+| 21614     | 2007-10-21 | 282          | KT03     |           2 |       595.00 |
+| 21617     | 2007-10-23 | 608          | BV06     |           2 |       794.95 |
+| 21617     | 2007-10-23 | 608          | CD52     |           4 |       150.00 |
+| 21619     | 2007-10-23 | 148          | DR93     |           1 |       495.00 |
+| 21623     | 2007-10-23 | 608          | KV29     |           2 |      1290.00 |
++-----------+------------+--------------+----------+-------------+--------------+
+9 rows in set (0.00 sec)
+
+mysql> select 
+    -> CONCAT (last_name, ", " , first_name) as "Sales Rep",
+    -> customer_name as "Customer",
+    -> Concat (customer.street, ", ", customer.city, ", ", customer.state, ", ", customer.zip) as "Address",
+    -> (credit_limit - balance) as "Available Credit" 
+    -> from rep
+    ->  join customer on customer.rep_num = rep.rep_num
+    ->  order by (customer.credit_limit - customer.balance) DESC;
++-----------------+----------------------------+--------------------------------------+------------------+
+| Sales Rep       | Customer                   | Address                              | Available Credit |
++-----------------+----------------------------+--------------------------------------+------------------+
+| Hull, Richard   | Brookings Direct           | 3827 Devon, Grove, FL, 33321         |          9568.50 |
+| Perez, Juan     | Johnson's Department Store | 372 Oxford, Sheldon, FL, 33553       |          7894.00 |
+| Hull, Richard   | Deerfield's Four Seasons   | 282 Columbia, Sheldon, FL, 33553     |          7252.00 |
+| Perez, Juan     | Bargains Galore            | 3829 Central, Grove, FL, 33321       |          6588.00 |
+| Kaiser, Valerie | Kline's                    | 838 Ridgeland, Fillmore, FL, 33336   |          2238.00 |
+| Hull, Richard   | Lee's Sport and Appliance  | 282 Evergreen, Altonville, FL, 32543 |          2149.00 |
+| Perez, Juan     | Ferguson's                 | 382 Wildwood, Northfield, FL, 33146  |          1715.00 |
+| Kaiser, Valerie | Al's Appliance and Sport   | 2837 Greenway, Fillmore, FL, 33336   |           950.00 |
+| Hull, Richard   | The Everything Shop        | 1828 Raven, Crystal, FL, 33503       |          -285.25 |
+| Kaiser, Valerie | All Season                 | 28 Lakeview, Grove, FL, 33321        |          -721.00 |
++-----------------+----------------------------+--------------------------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> select 
+    ->   customer.customer_name,
+    ->   part.description,
+    ->   order_line.num_ordered
+    -> from customer
+    ->   join orders on orders.customer_num = customer.customer_num
+    ->   join order_line on order_line.order_num = orders.order_num
+    ->   join part on part.part_num = order_line.part_num
+    ->   order by customer_name desc;
++----------------------------+----------------+-------------+
+| customer_name              | description    | num_ordered |
++----------------------------+----------------+-------------+
+| The Everything Shop        | Dryer          |           4 |
+| Johnson's Department Store | Home Gym       |           2 |
+| Johnson's Department Store | Microwave Oven |           4 |
+| Johnson's Department Store | Treadmill      |           2 |
+| Ferguson's                 | Gas Range      |           1 |
+| Ferguson's                 | Washer         |           1 |
+| Brookings Direct           | Dishwasher     |           2 |
+| Al's Appliance and Sport   | Iron           |          11 |
+| Al's Appliance and Sport   | Gas Range      |           1 |
++----------------------------+----------------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> use alexamara_marina_group;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+mysql> select
+    ->  marina.name,
+    ->  concat(owner.first_name, ", ", owner.last_name) as Owner,
+    ->  marina_slip.rental_fee,
+    ->  marina_slip.boat_name
+    -> from marina_slip
+    ->   join owner on owner.owner_num = marina_slip.owner_num
+    ->   join marina on marina.marina_num = marina_slip.marina_num;
++-------------------+------------------------+------------+--------------+
+| name              | Owner                  | rental_fee | boat_name    |
++-------------------+------------------------+------------+--------------+
+| Alexamara East    | Bill, Anderson         |    3800.00 | Anderson II  |
+| Alexamara East    | Sandy and Bill, Elend  |    3800.00 | Our Toy      |
+| Alexamara East    | Alyssa, Kelly          |    3600.00 | Escape       |
+| Alexamara East    | Maria, Juarez          |    2400.00 | Gypsy        |
+| Alexamara East    | Bill, Anderson         |    2600.00 | Anderson III |
+| Alexamara Central | Bruce and Jean, Adney  |    1800.00 | Bravo        |
+| Alexamara Central | Daniel, Feenstra       |    1800.00 | Chinook      |
+| Alexamara Central | Becky and Dave, Smeltz |    2000.00 | Listy        |
+| Alexamara Central | Mary, Blake            |    2500.00 | Mermaid      |
+| Alexamara Central | Peter, Norton          |    4200.00 | Axxon II     |
+| Alexamara Central | Ashton, Trent          |    4200.00 | Karvel       |
++-------------------+------------------------+------------+--------------+
+11 rows in set (0.00 sec)
+
+mysql> select
+    ->  marina.name,
+    ->  owner.first_name,  
+    ->  owner.last_name
+    -> from marina_slip
+    ->   join owner on owner.owner_num = marina_slip.owner_num
+    ->   join marina on marina.marina_num = marina_slip.marina_num;
++-------------------+----------------+-----------+
+| name              | first_name     | last_name |
++-------------------+----------------+-----------+
+| Alexamara East    | Bill           | Anderson  |
+| Alexamara East    | Sandy and Bill | Elend     |
+| Alexamara East    | Alyssa         | Kelly     |
+| Alexamara East    | Maria          | Juarez    |
+| Alexamara East    | Bill           | Anderson  |
+| Alexamara Central | Bruce and Jean | Adney     |
+| Alexamara Central | Daniel         | Feenstra  |
+| Alexamara Central | Becky and Dave | Smeltz    |
+| Alexamara Central | Mary           | Blake     |
+| Alexamara Central | Peter          | Norton    |
+| Alexamara Central | Ashton         | Trent     |
++-------------------+----------------+-----------+
+11 rows in set (0.00 sec)
+
+
+mysql> select
+    ->  CONCAT (owner.first_name, ", ", owner.last_name) as "Customer",
+    ->  service_category.category_description as "Description",
+    ->  sum(est_hours) as "E_Hours",
+    ->  sum(spent_hours) as "S_Hours"
+    -> from owner
+    ->  join marina_slip on marina_slip.owner_num = owner.owner_num
+    ->  join service_request on marina_slip.slip_id = service_request.slip_id
+    ->  join service_category on service_request.category_num = service_category.category_num
+    ->  group by CONCAT (owner.first_name, ", ", owner.last_name), service_category.category_description;
++------------------------+---------------------------------------------------+---------+---------+
+| Customer               | Description                                       | E_Hours | S_Hours |
++------------------------+---------------------------------------------------+---------+---------+
+| Alyssa, Kelly          | Fiberglass repair                                 |    4.00 |    2.00 |
+| Ashton, Trent          | Canvas repair                                     |    8.00 |    3.00 |
+| Ashton, Trent          | Electrical systems                                |    3.00 |    0.00 |
+| Becky and Dave, Smeltz | Engine repair                                     |    5.00 |    2.00 |
+| Bill, Anderson         | Air conditioning                                  |    4.00 |    2.00 |
+| Bill, Anderson         | Electrical systems                                |    2.00 |    0.00 |
+| Bill, Anderson         | Engine repair                                     |    2.00 |    0.00 |
+| Bruce and Jean, Adney  | Engine repair                                     |    6.00 |    1.00 |
+| Daniel, Feenstra       | Canvas installation                               |    8.00 |    0.00 |
+| Daniel, Feenstra       | Fiberglass repair                                 |    6.00 |    0.00 |
+| Maria, Juarez          | Electronic systems (radar, GPS, autopilots, etc.) |    2.00 |    0.00 |
+| Maria, Juarez          | Routine engine maintenance                        |    1.00 |    0.00 |
+| Sandy and Bill, Elend  | Air conditioning                                  |    1.00 |    1.00 |
+| Sandy and Bill, Elend  | Electronic systems (radar, GPS, autopilots, etc.) |    7.00 |    0.00 |
++------------------------+---------------------------------------------------+---------+---------+
+14 rows in set (0.01 sec)
+
+mysql> use henry_books;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+mysql> select
+    -> CONCAT(Author_last, ", ", Author_first) as "Author Name",
+    -> title,
+    -> price
+    -> from Author
+    ->   join wrote on author.author_num = wrote.author_num
+    ->   join book on wrote.book_code = book.book_code;
++------------------------+------------------------------------------+-------+
+| Author Name            | title                                    | price |
++------------------------+------------------------------------------+-------+
+| Vintage, Vernor        | A Deepness in the Sky                    |  7.19 |
+| Straub, Peter          | Magic Terror                             |  7.99 |
+| Camus, Albert          | The Stranger                             |  8.00 |
+| Wills, Gary            | Venice                                   | 24.50 |
+| Francis, Dick          | Second Wind                              | 24.95 |
+| Francis, Dick          | The Edge                                 |  6.99 |
+| King, Stephen          | Dreamcatcher: A Novel                    | 19.60 |
+| O'Rourke, Randy        | Treasure Chests                          | 24.46 |
+| Schleining, Lon        | Treasure Chests                          | 24.46 |
+| Morrison, Toni         | Beloved                                  | 12.95 |
+| Rowling, J.K.          | Harry Potter and the Prisoner of Azkaban | 13.96 |
+| Collins, Bradley       | Van Gogh and Gauguin                     | 21.00 |
+| Collins, Jr., Bradley  | Van Gogh and Gauguin                     | 21.00 |
+| Steinbeck, John        | Of Mice and Men                          |  6.95 |
+| Heaney, Seamus         | Electric Light                           | 14.00 |
+| Solotaroff, Paul       | Group: Six People in Search of a Life    | 10.40 |
+| Salinger, J.D.         | Nine Stories                             |  5.99 |
+| Kidder, Tracy          | The Soul of a New Machine                | 11.16 |
+| Steinbeck, John        | Travels with Charley                     |  7.95 |
+| Heller, Joseph         | Catch-22                                 | 12.00 |
+| Morrison, Toni         | Jazz                                     | 12.95 |
+| Ambrose, Stephen E.    | Band of Brothers                         |  9.60 |
+| Pratt, Philip          | A Guide to SQL                           | 37.95 |
+| Salinger, J.D.         | Franny and Zooey                         |  5.99 |
+| Steinbeck, John        | East of Eden                             | 12.95 |
+| Rowling, J.K.          | Harry Potter and the Goblet of Fire      | 18.16 |
+| Camus, Albert          | The Fall                                 |  8.00 |
+| Hofstadter, Douglas R. | Godel, Escher, Bach                      | 14.00 |
+| Chase, Truddi          | When Rabbit Howls                        |  6.29 |
+| Straub, Peter          | Black House                              | 18.81 |
+| King, Stephen          | Black House                              | 18.81 |
+| Morrison, Toni         | Song of Solomon                          | 14.00 |
+| Steinbeck, John        | The Grapes of Wrath                      | 13.00 |
+| Francis, Dick          | Slay Ride                                |  6.99 |
+| Salinger, J.D.         | The Catcher in the Rye                   |  5.99 |
+| Lee, Harper            | To Kill a Mockingbird                    | 18.00 |
++------------------------+------------------------------------------+-------+
+36 rows in set (0.00 sec)
+
+
+mysql> select
+    ->  book_code,
+    ->  title,
+    ->  publisher_name,
+    ->  type,
+    ->  price
+    ->  from book
+    ->   join publisher on publisher.publisher_code = book.publisher_code;
++-----------+------------------------------------------+--------------------------+------+-------+
+| book_code | title                                    | publisher_name           | type | price |
++-----------+------------------------------------------+--------------------------+------+-------+
+| 0180      | A Deepness in the Sky                    | Tor Books                | SFI  |  7.19 |
+| 0189      | Magic Terror                             | Fawcett Books            | HOR  |  7.99 |
+| 0200      | The Stranger                             | Vintage Books            | FIC  |  8.00 |
+| 0378      | Venice                                   | Simon and Schuster       | ART  | 24.50 |
+| 079X      | Second Wind                              | Putnam Publishing Group  | MYS  | 24.95 |
+| 0808      | The Edge                                 | Jove Publications        | MYS  |  6.99 |
+| 1351      | Dreamcatcher: A Novel                    | Scribner                 | HOR  | 19.60 |
+| 1382      | Treasure Chests                          | Taunton Press            | ART  | 24.46 |
+| 138X      | Beloved                                  | Plume                    | FIC  | 12.95 |
+| 2226      | Harry Potter and the Prisoner of Azkaban | Scholastic Trade         | SFI  | 13.96 |
+| 2281      | Van Gogh and Gauguin                     | Westview Press           | ART  | 21.00 |
+| 2766      | Of Mice and Men                          | Penguin USA              | FIC  |  6.95 |
+| 2908      | Electric Light                           | Farrar Straus and Giroux | POE  | 14.00 |
+| 3350      | Group: Six People in Search of a Life    | Berkley Publishing       | PSY  | 10.40 |
+| 3743      | Nine Stories                             | Lb Books                 | FIC  |  5.99 |
+| 3906      | The Soul of a New Machine                | Back Bay Books           | SCI  | 11.16 |
+| 5163      | Travels with Charley                     | Penguin USA              | TRA  |  7.95 |
+| 5790      | Catch-22                                 | Scribner                 | FIC  | 12.00 |
+| 6128      | Jazz                                     | Plume                    | FIC  | 12.95 |
+| 6328      | Band of Brothers                         | Touchstone Books         | HIS  |  9.60 |
+| 669X      | A Guide to SQL                           | Course Technology        | CMP  | 37.95 |
+| 6908      | Franny and Zooey                         | Lb Books                 | FIC  |  5.99 |
+| 7405      | East of Eden                             | Penguin USA              | FIC  | 12.95 |
+| 7443      | Harry Potter and the Goblet of Fire      | Scholastic Trade         | SFI  | 18.16 |
+| 7559      | The Fall                                 | Vintage Books            | FIC  |  8.00 |
+| 8092      | Godel, Escher, Bach                      | Basic Books              | PHI  | 14.00 |
+| 8720      | When Rabbit Howls                        | Jove Publications        | PSY  |  6.29 |
+| 9611      | Black House                              | Random House             | HOR  | 18.81 |
+| 9627      | Song of Solomon                          | Plume                    | FIC  | 14.00 |
+| 9701      | The Grapes of Wrath                      | Penguin USA              | FIC  | 13.00 |
+| 9882      | Slay Ride                                | Jove Publications        | MYS  |  6.99 |
+| 9883      | The Catcher in the Rye                   | Lb Books                 | FIC  |  5.99 |
+| 9931      | To Kill a Mockingbird                    | HarperCollins Publishers | FIC  | 18.00 |
++-----------+------------------------------------------+--------------------------+------+-------+
+33 rows in set (0.01 sec)
+
+mysql> select
+    ->   Branch_name,
+    ->   type,
+    ->   sum(on_hand)
+    -> from Branch
+    ->   join inventory on branch.branch_num = inventory.branch_num
+    ->   join book on inventory.book_code = book.book_code
+    -> group by Branch_name, type;
++-------------------+------+--------------+
+| Branch_name       | type | sum(on_hand) |
++-------------------+------+--------------+
+| Henry Brentwood   | ART  |            2 |
+| Henry Brentwood   | FIC  |           15 |
+| Henry Brentwood   | HOR  |            2 |
+| Henry Brentwood   | MYS  |            5 |
+| Henry Brentwood   | PHI  |            1 |
+| Henry Brentwood   | SCI  |            2 |
+| Henry Brentwood   | SFI  |            2 |
+| Henry Downtown    | CMP  |            1 |
+| Henry Downtown    | FIC  |            5 |
+| Henry Downtown    | HOR  |            2 |
+| Henry Downtown    | POE  |            3 |
+| Henry Downtown    | PSY  |            5 |
+| Henry Downtown    | SFI  |            5 |
+| Henry Downtown    | TRA  |            1 |
+| Henry Eastshore   | ART  |            3 |
+| Henry Eastshore   | FIC  |            8 |
+| Henry Eastshore   | MYS  |            3 |
+| Henry Eastshore   | POE  |            1 |
+| Henry Eastshore   | SFI  |            2 |
+| Henry On The Hill | ART  |            1 |
+| Henry On The Hill | FIC  |           19 |
+| Henry On The Hill | HIS  |            2 |
+| Henry On The Hill | HOR  |            6 |
+| Henry On The Hill | MYS  |            2 |
+| Henry On The Hill | SCI  |            1 |
++-------------------+------+--------------+
+25 rows in set (0.00 sec)
+

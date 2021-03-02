@@ -1,0 +1,142 @@
+mysql> use premiere;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create table NONAPPLIANCE
+    -> ( part_num char(4) primary key,
+    -> description char(15),
+    -> on_hand decimal(4,0),
+    -> class char(2),
+    -> price decimal (6,2)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_premiere |
++--------------------+
+| CUSTOMER           |
+| NONAPPLIANCE       |
+| ORDERS             |
+| ORDER_LINE         |
+| PART               |
+| REP                |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> show columns from nonappliance;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| part_num    | char(4)      | NO   | PRI | NULL    |       |
+| description | char(15)     | YES  |     | NULL    |       |
+| on_hand     | decimal(4,0) | YES  |     | NULL    |       |
+| class       | char(2)      | YES  |     | NULL    |       |
+| price       | decimal(6,2) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> insert into NONAPPLIANCE
+    -> select part_num, description, on_hand, class, price
+    -> from part;
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from NONAPPLIANCE
+    -> ;
++----------+----------------+---------+-------+---------+
+| part_num | description    | on_hand | class | price   |
++----------+----------------+---------+-------+---------+
+| AT94     | Iron           |      50 | HW    |   24.95 |
+| BV06     | Home Gym       |      45 | SG    |  794.95 |
+| CD52     | Microwave Oven |      32 | AP    |  165.00 |
+| DL71     | Cordless Drill |      21 | HW    |  129.95 |
+| DR93     | Gas Range      |       8 | AP    |  495.00 |
+| DW11     | Washer         |      12 | AP    |  399.99 |
+| FD21     | Stand Mixer    |      22 | HW    |  159.95 |
+| KL62     | Dryer          |      12 | AP    |  349.95 |
+| KT03     | Dishwasher     |       8 | AP    |  595.00 |
+| KV29     | Treadmill      |       9 | SG    | 1390.00 |
++----------+----------------+---------+-------+---------+
+10 rows in set (0.00 sec)
+
+
+mysql> update NONAPPLIANCE
+    -> set description = 'Deluxe Iron'
+    -> where part_num = 'AT94' ;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> exit
+mysql> use premiere;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> update NONAPPLIANCE set price = price * 1.02 where class = 'SG';
+Query OK, 2 rows affected, 1 warning (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 1
+
+mysql> select * from NONAPPLIANCE;
++----------+----------------+---------+-------+---------+
+| part_num | description    | on_hand | class | price   |
++----------+----------------+---------+-------+---------+
+| AT94     | Deluxe Iron    |      50 | HW    |   24.95 |
+| BV06     | Home Gym       |      45 | SG    |  810.85 |
+| CD52     | Microwave Oven |      32 | AP    |  165.00 |
+| DL71     | Cordless Drill |      21 | HW    |  129.95 |
+| DR93     | Gas Range      |       8 | AP    |  495.00 |
+| DW11     | Washer         |      12 | AP    |  399.99 |
+| FD21     | Stand Mixer    |      22 | HW    |  159.95 |
+| KL62     | Dryer          |      12 | AP    |  349.95 |
+| KT03     | Dishwasher     |       8 | AP    |  595.00 |
+| KV29     | Treadmill      |       9 | SG    | 1417.80 |
++----------+----------------+---------+-------+---------+
+10 rows in set (0.01 sec)
+
+mysql> insert into NONAPPLIANCE values ('TL92', 'Trimmer', '11', 'HW', '29.95');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> delete from NONAPPLIANCE where class = 'SG';
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> update NONAPPLIANCE set description = null where part_num = 'FD21';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> alter table NONAPPLIANCE modify description char(30);
+Query OK, 9 rows affected (0.09 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> select * from NONAPPLIANCE;
++----------+----------------+---------+-------+--------+
+| part_num | description    | on_hand | class | price  |
++----------+----------------+---------+-------+--------+
+| AT94     | Deluxe Iron    |      50 | HW    |  24.95 |
+| CD52     | Microwave Oven |      32 | AP    | 165.00 |
+| DL71     | Cordless Drill |      21 | HW    | 129.95 |
+| DR93     | Gas Range      |       8 | AP    | 495.00 |
+| DW11     | Washer         |      12 | AP    | 399.99 |
+| FD21     | NULL           |      22 | HW    | 159.95 |
+| KL62     | Dryer          |      12 | AP    | 349.95 |
+| KT03     | Dishwasher     |       8 | AP    | 595.00 |
+| TL92     | Trimmer        |      11 | HW    |  29.95 |
++----------+----------------+---------+-------+--------+
+9 rows in set (0.01 sec)
+
+mysql> drop table NONAPPLIANCE;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_premiere |
++--------------------+
+| CUSTOMER           |
+| ORDERS             |
+| ORDER_LINE         |
+| PART               |
+| REP                |
++--------------------+
+5 rows in set (0.01 sec)
+

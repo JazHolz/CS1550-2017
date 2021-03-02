@@ -1,0 +1,117 @@
+mysql> use henry_books;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+mysql> create table mystery
+    -> (
+    -> book_code char(4) primary key,
+    -> title char(40),
+    -> publisher_code char(3),
+    -> price decimal (4,2)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into mystery select book_code, title, publisher_code, price from book where type = 'MYS';
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from mystery;
++-----------+-------------+----------------+-------+
+| book_code | title       | publisher_code | price |
++-----------+-------------+----------------+-------+
+| 079X      | Second Wind | PU             | 24.95 |
+| 0808      | The Edge    | JP             |  6.99 |
+| 9882      | Slay Ride   | JP             |  6.99 |
++-----------+-------------+----------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> Update Mystery set price = price * -0.04 where publisher_code = 'JP';
+Query OK, 2 rows affected, 2 warnings (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 2
+
+mysql> insert into mystery values ('9946', 'Like Me', 'MP', '11.95');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> delete from mystery where book_code = '9882';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> update mystery set price = null where title = 'The Edge';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> alter table mystery add column best_seller char(1);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from mystery;
++-----------+-------------+----------------+-------+-------------+
+| book_code | title       | publisher_code | price | best_seller |
++-----------+-------------+----------------+-------+-------------+
+| 079X      | Second Wind | PU             | 24.95 | NULL        |
+| 0808      | The Edge    | JP             |  NULL | NULL        |
+| 9946      | Like Me     | MP             | 11.95 | NULL        |
++-----------+-------------+----------------+-------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> update mystery set best_seller = 'N' where best_seller = null;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from mystery;
++-----------+-------------+----------------+-------+-------------+
+| book_code | title       | publisher_code | price | best_seller |
++-----------+-------------+----------------+-------+-------------+
+| 079X      | Second Wind | PU             | 24.95 | NULL        |
+| 0808      | The Edge    | JP             |  NULL | NULL        |
+| 9946      | Like Me     | MP             | 11.95 | NULL        |
++-----------+-------------+----------------+-------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> alter table mystery drop column best_seller;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table mystery add column best_seller char(1) default 'N';
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update mystery set best_seller = 'Y' where title = 'Second Wind';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> alter table mystery modify title char(50);
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> update mystery set best_seller = NOT NULL where best_seller = NULL;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from mystery;
++-----------+-------------+----------------+-------+-------------+
+| book_code | title       | publisher_code | price | best_seller |
++-----------+-------------+----------------+-------+-------------+
+| 079X      | Second Wind | PU             | 24.95 | Y           |
+| 0808      | The Edge    | JP             |  NULL | N           |
+| 9946      | Like Me     | MP             | 11.95 | N           |
++-----------+-------------+----------------+-------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> drop table mystery;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++-----------------------+
+| Tables_in_henry_books |
++-----------------------+
+| AUTHOR                |
+| BOOK                  |
+| BRANCH                |
+| INVENTORY             |
+| PUBLISHER             |
+| WROTE                 |
++-----------------------+
+6 rows in set (0.00 sec)
+

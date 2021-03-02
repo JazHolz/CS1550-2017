@@ -1,0 +1,91 @@
+mysql> CREATE DATABASE THANKSGIVING;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++------------------------+
+| Database               |
++------------------------+
+| information_schema     |
+| ALEXAMARA_MARINA_GROUP |
+| GENERIC_COMPANY        |
+| HENRY_BOOKS            |
+| PREMIERE               |
+| THANKSGIVING           |
+| mysql                  |
+| performance_schema     |
+| sys                    |
++------------------------+
+9 rows in set (0.00 sec)
+
+mysql> use THANKSGIVING;
+Database changed
+mysql> create table DINNER
+    -> (
+    -> FOOD CHAR(50),
+    -> RANKING INT,
+    -> COOK CHAR(25)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++------------------------+
+| Tables_in_thanksgiving |
++------------------------+
+| DINNER                 |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql> show columns from DINNER;
++---------+----------+------+-----+---------+-------+
+| Field   | Type     | Null | Key | Default | Extra |
++---------+----------+------+-----+---------+-------+
+| FOOD    | char(50) | YES  |     | NULL    |       |
+| RANKING | int(11)  | YES  |     | NULL    |       |
+| COOK    | char(25) | YES  |     | NULL    |       |
++---------+----------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Turkey', 9, 'Aunt Farangis');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Stuffing', 1, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Mashed Potato\'s', 8, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Gravy', 9, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Cranberry Sauce', 5, 'Aunt Farangis');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Apple Pie', 2, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Pumpkin Pie', 10, 'Aunt Farangis');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Pecan Pie', 10, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dinner (FOOD, RANKING, COOK) values ('Roll\'s', 4, 'Aunt Farangis');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from DINNER;
++-----------------+---------+---------------+
+| FOOD            | RANKING | COOK          |
++-----------------+---------+---------------+
+| Turkey          |       9 | Aunt Farangis |
+| Stuffing        |       1 | Aunt Farangis |
+| Mashed Potato's |       8 | Aunt Farangis |
+| Gravy           |       9 | Aunt Farangis |
+| Cranberry Sauce |       5 | Aunt Farangis |
+| Apple Pie       |       2 | Aunt Farangis |
+| Pumpkin Pie     |      10 | Aunt Farangis |
+| Pecan Pie       |      10 | Aunt Farangis |
+| Roll's          |       4 | Aunt Farangis |
++-----------------+---------+---------------+
+9 rows in set (0.00 sec)
+
+mysql> exit

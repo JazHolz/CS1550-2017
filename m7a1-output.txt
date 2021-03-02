@@ -1,0 +1,232 @@
+
+mysql> source /Users/Kat/Downloads/create-users-premiere.sql 
+Query OK, 0 rows affected, 8 warnings (0.01 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
++---------------+
+| USER          |
++---------------+
+| Ashton        |
+| Danielson     |
+| Grinstead     |
+| James         |
+| Kelly         |
+| Morgan        |
+| Perez         |
+| Washington    |
+| mysql.session |
+| mysql.sys     |
+| root          |
++---------------+
+11 rows in set (0.00 sec)
+
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create view major_customer as
+    -> select customer_num, customer_name, balance, credit_limit, rep_num
+    -> from customer
+    -> where credit_limit <= 10000;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select customer_num, customer_name
+    -> from major_customer
+    -> where balance > credit_limit;
++--------------+---------------------+
+| customer_num | customer_name       |
++--------------+---------------------+
+| 408          | The Everything Shop |
+| 842          | All Season          |
++--------------+---------------------+
+2 rows in set (0.01 sec)
+
+mysql> select customer_num, customer_name
+    -> from customer
+    -> where credit_limit <= 10000
+    -> and balance > credit_limit;
++--------------+---------------------+
+| customer_num | customer_name       |
++--------------+---------------------+
+| 408          | The Everything Shop |
+| 842          | All Season          |
++--------------+---------------------+
+2 rows in set (0.01 sec)
+
+mysql> create view part_order as
+    -> select part.part_num, description, price, order_line.order_num,
+    -> order_date, num_ordered, quoted_price
+    -> from part, order_line, orders
+    -> where part.part_num = order_line.part_num
+    -> and orders.order_num = order_line.order_num;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select part_num, description, order_num, quoted_price
+    -> from part_order
+    -> where quoted_price > 100;
++----------+----------------+-----------+--------------+
+| part_num | description    | order_num | quoted_price |
++----------+----------------+-----------+--------------+
+| DR93     | Gas Range      | 21610     |       495.00 |
+| DW11     | Washer         | 21610     |       399.99 |
+| KL62     | Dryer          | 21613     |       329.95 |
+| KT03     | Dishwasher     | 21614     |       595.00 |
+| BV06     | Home Gym       | 21617     |       794.95 |
+| CD52     | Microwave Oven | 21617     |       150.00 |
+| DR93     | Gas Range      | 21619     |       495.00 |
+| KV29     | Treadmill      | 21623     |      1290.00 |
++----------+----------------+-----------+--------------+
+8 rows in set (0.00 sec)
+
+mysql> select part.part_num, description, order_line.order_num, quoted_price
+    -> from part, order_line, orders
+    -> where part.part_num = order_line.part_num
+    -> and orders.order_num = order_line.order_num
+    -> and quoted_price_price > 100;
++----------+----------------+-----------+--------------+
+| part_num | description    | order_num | quoted_price |
++----------+----------------+-----------+--------------+
+| DR93     | Gas Range      | 21610     |       495.00 |
+| DW11     | Washer         | 21610     |       399.99 |
+| KL62     | Dryer          | 21613     |       329.95 |
+| KT03     | Dishwasher     | 21614     |       595.00 |
+| BV06     | Home Gym       | 21617     |       794.95 |
+| CD52     | Microwave Oven | 21617     |       150.00 |
+| DR93     | Gas Range      | 21619     |       495.00 |
+| KV29     | Treadmill      | 21623     |      1290.00 |
++----------+----------------+-----------+--------------+
+8 rows in set (0.00 sec)
+
+mysql> create view order_total as
+    -> select order_num, (num_ordered * quoted_price) as total_amount
+    -> from order_line
+    -> order by order_num;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from order_total
+    -> where total_amount > 1000;
++-----------+--------------+
+| order_num | total_amount |
++-----------+--------------+
+| 21613     |      1319.80 |
+| 21614     |      1190.00 |
+| 21617     |      1589.90 |
+| 21623     |      2580.00 |
++-----------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select order_num, (num_ordered * quoted_price) as total_amount
+    -> from order_line
+    -> where (num_ordered * quoted_price) > 1000
+    -> order by order_num;
++-----------+--------------+
+| order_num | total_amount |
++-----------+--------------+
+| 21613     |      1319.80 |
+| 21614     |      1190.00 |
+| 21617     |      1589.90 |
+| 21623     |      2580.00 |
++-----------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> GRANT select on part to Ashton;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT insert on orders to Kelly, Morgan;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT insert on order_line to Kelly, Morgan;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT update (price) on part to James;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT delete on customer to Danielson;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant index on orders to Perez;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE INDEX PART_INDEX1 ON ORDER_LINE(PART_NUM);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX PART_INDEX2 ON PART(CLASS);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX PART_INDEX3 ON PART(CLASS, WAREHOUSE);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX PART_INDEX4 ON PART(CLASS DESC, WAREHOUSE);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> DROP INDEX PART_INDEX3 ON PART;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SHOW TABLES;
++--------------------+
+| Tables_in_premiere |
++--------------------+
+| CUSTOMER           |
+| ORDERS             |
+| ORDER_LINE         |
+| PART               |
+| REP                |
+| major_customer     |
+| order_total        |
+| part_order         |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> SHOW COLUMNS FROM PART;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| PART_NUM    | char(4)      | NO   | PRI | NULL    |       |
+| DESCRIPTION | char(15)     | YES  |     | NULL    |       |
+| ON_HAND     | decimal(4,0) | YES  |     | NULL    |       |
+| CLASS       | char(2)      | YES  | MUL | NULL    |       |
+| WAREHOUSE   | char(1)      | YES  |     | NULL    |       |
+| PRICE       | decimal(6,2) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SHOW INDEX FROM PART;
++-------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table | Non_unique | Key_name    | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| part  |          0 | PRIMARY     |            1 | PART_NUM    | A         |          10 |     NULL | NULL   |      | BTREE      |         |               |
+| part  |          1 | PART_INDEX2 |            1 | CLASS       | A         |           3 |     NULL | NULL   | YES  | BTREE      |         |               |
+| part  |          1 | PART_INDEX4 |            1 | CLASS       | A         |           3 |     NULL | NULL   | YES  | BTREE      |         |               |
+| part  |          1 | PART_INDEX4 |            2 | WAREHOUSE   | A         |           5 |     NULL | NULL   | YES  | BTREE      |         |               |
++-------+------------+-------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE ORDER_LINE
+    -> ADD FOREIGN KEY (ORDER_NUM) REFERENCES ORDERS (ORDER_NUM);
+Query OK, 9 rows affected (0.04 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+

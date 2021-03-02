@@ -1,0 +1,121 @@
+mysql> use alexamara_marina_group;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create table LARGE_SLIP
+    -> (
+    -> marina_num char(4),
+    -> slip_num char(4),
+    -> rental_fee decimal (8,2),
+    -> boat_name char(50),
+    -> owner_num char(4),
+    -> primary key (marina_num, slip_num)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> insert into large_slip
+    -> select marina_num,
+    -> slip_num,
+    -> rental_fee,
+    -> boat_name,
+    -> owner_num
+    -> from marina_slip
+    -> where length = 40;
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from large_slip;
++------------+----------+------------+-------------+-----------+
+| marina_num | slip_num | rental_fee | boat_name   | owner_num |
++------------+----------+------------+-------------+-----------+
+| 1          | A1       |    3800.00 | Anderson II | AN75      |
+| 1          | A2       |    3800.00 | Our Toy     | EL25      |
+| 1          | A3       |    3600.00 | Escape      | KE22      |
+| 2          | 5        |    4200.00 | Axxon II    | NO27      |
+| 2          | 6        |    4200.00 | Karvel      | TR72      |
++------------+----------+------------+-------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> update large_slip
+    -> set rental_fee = rental_fee + 100;
+Query OK, 5 rows affected (0.01 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> update large_slip
+    -> set rental_fee = rental_fee - rental_fee*0.01
+    -> where rental_fee > 4000;
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> insert into large_slip
+    -> values ('1', 'A4', '3900', 'Bilsan', 'FE82');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> delete from large_slip
+    -> where owner_num = 'TR72';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> update large_slip
+    -> set boat_name = NULL
+    -> where marina_num = '1' AND slip_num = 'A1';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> alter table large_slip add charter char(1) default 'N';
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update large_slip set charter = 'Y' where marina_num = 1 AND slip_num = 'A2';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Large_slip;
++------------+----------+------------+-----------+-----------+---------+
+| marina_num | slip_num | rental_fee | boat_name | owner_num | charter |
++------------+----------+------------+-----------+-----------+---------+
+| 1          | A1       |    3900.00 | NULL      | AN75      | N       |
+| 1          | A2       |    3900.00 | Our Toy   | EL25      | Y       |
+| 1          | A3       |    3700.00 | Escape    | KE22      | N       |
+| 1          | A4       |    3900.00 | Bilsan    | FE82      | N       |
+| 2          | 5        |    4257.00 | Axxon II  | NO27      | N       |
++------------+----------+------------+-----------+-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> alter table large_slip modify boat_name char(60);
+Query OK, 5 rows affected (0.04 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> update large_slip set rental_fee = NOT NULL where rental_fee = NULL;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from large_slip;
++------------+----------+------------+-----------+-----------+---------+
+| marina_num | slip_num | rental_fee | boat_name | owner_num | charter |
++------------+----------+------------+-----------+-----------+---------+
+| 1          | A1       |    3900.00 | NULL      | AN75      | N       |
+| 1          | A2       |    3900.00 | Our Toy   | EL25      | Y       |
+| 1          | A3       |    3700.00 | Escape    | KE22      | N       |
+| 1          | A4       |    3900.00 | Bilsan    | FE82      | N       |
+| 2          | 5        |    4257.00 | Axxon II  | NO27      | N       |
++------------+----------+------------+-----------+-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> drop table large_slip;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++----------------------------------+
+| Tables_in_alexamara_marina_group |
++----------------------------------+
+| MARINA                           |
+| MARINA_SLIP                      |
+| OWNER                            |
+| SERVICE_CATEGORY                 |
+| SERVICE_REQUEST                  |
++----------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit

@@ -1,0 +1,293 @@
+mysql> use premiere;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select
+    -> customer.customer_name,
+    -> customer.customer_num,
+    ->  order_num,
+    -> order_date
+    -> from customer
+    -> left join orders on customer.customer_num = orders.customer_num;
++----------------------------+--------------+-----------+------------+
+| customer_name              | customer_num | order_num | order_date |
++----------------------------+--------------+-----------+------------+
+| Al's Appliance and Sport   | 148          | 21608     | 2007-10-20 |
+| Ferguson's                 | 356          | 21610     | 2007-10-20 |
+| The Everything Shop        | 408          | 21613     | 2007-10-21 |
+| Brookings Direct           | 282          | 21614     | 2007-10-21 |
+| Johnson's Department Store | 608          | 21617     | 2007-10-23 |
+| Al's Appliance and Sport   | 148          | 21619     | 2007-10-23 |
+| Johnson's Department Store | 608          | 21623     | 2007-10-23 |
+| Bargains Galore            | 462          | NULL      | NULL       |
+| Kline's                    | 524          | NULL      | NULL       |
+| Lee's Sport and Appliance  | 687          | NULL      | NULL       |
+| Deerfield's Four Seasons   | 725          | NULL      | NULL       |
+| All Season                 | 842          | NULL      | NULL       |
++----------------------------+--------------+-----------+------------+
+12 rows in set (0.00 sec)
+
+mysql> select
+    -> customer.customer_name,
+    -> customer.customer_num,
+    -> coalesce(orders.order_num, "N/A") as order_num,
+    -> coalesce(orders.order_date, "N/A") as order_date
+    -> from customer
+    -> left join orders on customer.customer_num = orders.customer_num;
++----------------------------+--------------+-----------+------------+
+| customer_name              | customer_num | order_num | order_date |
++----------------------------+--------------+-----------+------------+
+| Al's Appliance and Sport   | 148          | 21608     | 2007-10-20 |
+| Ferguson's                 | 356          | 21610     | 2007-10-20 |
+| The Everything Shop        | 408          | 21613     | 2007-10-21 |
+| Brookings Direct           | 282          | 21614     | 2007-10-21 |
+| Johnson's Department Store | 608          | 21617     | 2007-10-23 |
+| Al's Appliance and Sport   | 148          | 21619     | 2007-10-23 |
+| Johnson's Department Store | 608          | 21623     | 2007-10-23 |
+| Bargains Galore            | 462          | N/A       | N/A        |
+| Kline's                    | 524          | N/A       | N/A        |
+| Lee's Sport and Appliance  | 687          | N/A       | N/A        |
+| Deerfield's Four Seasons   | 725          | N/A       | N/A        |
+| All Season                 | 842          | N/A       | N/A        |
++----------------------------+--------------+-----------+------------+
+12 rows in set (0.00 sec)
+
+mysql> select
+    -> customer.customer_name,
+    -> customer.customer_num,
+    -> coalesce(orders.order_num, "N/A") as order_num,
+    -> coalesce(orders.order_date, "N/A") as order_date
+    -> from orders
+    -> right join customer on customer.customer_num = orders.customer_num;
++----------------------------+--------------+-----------+------------+
+| customer_name              | customer_num | order_num | order_date |
++----------------------------+--------------+-----------+------------+
+| Al's Appliance and Sport   | 148          | 21608     | 2007-10-20 |
+| Ferguson's                 | 356          | 21610     | 2007-10-20 |
+| The Everything Shop        | 408          | 21613     | 2007-10-21 |
+| Brookings Direct           | 282          | 21614     | 2007-10-21 |
+| Johnson's Department Store | 608          | 21617     | 2007-10-23 |
+| Al's Appliance and Sport   | 148          | 21619     | 2007-10-23 |
+| Johnson's Department Store | 608          | 21623     | 2007-10-23 |
+| Bargains Galore            | 462          | N/A       | N/A        |
+| Kline's                    | 524          | N/A       | N/A        |
+| Lee's Sport and Appliance  | 687          | N/A       | N/A        |
+| Deerfield's Four Seasons   | 725          | N/A       | N/A        |
+| All Season                 | 842          | N/A       | N/A        |
++----------------------------+--------------+-----------+------------+
+12 rows in set (0.00 sec)
+
+mysql> use alexamara_marina_group;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select
+    -> owner.last_name,
+    -> marina_slip.boat_name,
+    -> service_request.category_num
+    -> from owner
+    ->  left join marina_slip on owner.owner_num = marina_slip.owner_num
+    ->  left join service_request on marina_slip.slip_id = service_request.slip_id;
++-----------+--------------+--------------+
+| last_name | boat_name    | category_num |
++-----------+--------------+--------------+
+| Anderson  | Anderson II  |            3 |
+| Anderson  | Anderson III |            4 |
+| Juarez    | Gypsy        |            1 |
+| Anderson  | Anderson II  |            2 |
+| Kelly     | Escape       |            5 |
+| Trent     | Karvel       |            4 |
+| Adney     | Bravo        |            2 |
+| Adney     | Bravo        |            2 |
+| Feenstra  | Chinook      |            6 |
+| Elend     | Our Toy      |            8 |
+| Elend     | Our Toy      |            3 |
+| Juarez    | Gypsy        |            8 |
+| Smeltz    | Listy        |            2 |
+| Feenstra  | Chinook      |            5 |
+| Trent     | Karvel       |            7 |
+| Blake     | Mermaid      |         NULL |
+| Norton    | Axxon II     |         NULL |
++-----------+--------------+--------------+
+17 rows in set (0.00 sec)
+
+mysql> select
+    -> owner.last_name,
+    -> coalesce(marina_slip.boat_name, "N/A") as boat_name,
+    -> coalesce(service_request.category_num, "N/A") as category_num
+    -> from owner
+    ->   left join marina_slip on owner.owner_num = marina_slip.owner_num
+    ->   left join service_request on marina_slip.slip_id = service_request.slip_id;
++-----------+--------------+--------------+
+| last_name | boat_name    | category_num |
++-----------+--------------+--------------+
+| Anderson  | Anderson II  | 3            |
+| Anderson  | Anderson III | 4            |
+| Juarez    | Gypsy        | 1            |
+| Anderson  | Anderson II  | 2            |
+| Kelly     | Escape       | 5            |
+| Trent     | Karvel       | 4            |
+| Adney     | Bravo        | 2            |
+| Adney     | Bravo        | 2            |
+| Feenstra  | Chinook      | 6            |
+| Elend     | Our Toy      | 8            |
+| Elend     | Our Toy      | 3            |
+| Juarez    | Gypsy        | 8            |
+| Smeltz    | Listy        | 2            |
+| Feenstra  | Chinook      | 5            |
+| Trent     | Karvel       | 7            |
+| Blake     | Mermaid      | N/A          |
+| Norton    | Axxon II     | N/A          |
++-----------+--------------+--------------+
+17 rows in set (0.00 sec)
+
+mysql> select
+    -> owner.last_name,
+    -> coalesce(marina_slip.boat_name, "N/A") as boat_name,
+    -> coalesce(service_request.category_num, "N/A") as category_num
+    -> from service_request
+    ->   right join marina_slip on marina_slip.slip_id = service_request.slip_id
+    ->   right join owner on owner.owner_num = marina_slip.owner_num;
++-----------+--------------+--------------+
+| last_name | boat_name    | category_num |
++-----------+--------------+--------------+
+| Anderson  | Anderson II  | 3            |
+| Anderson  | Anderson III | 4            |
+| Juarez    | Gypsy        | 1            |
+| Anderson  | Anderson II  | 2            |
+| Kelly     | Escape       | 5            |
+| Trent     | Karvel       | 4            |
+| Adney     | Bravo        | 2            |
+| Adney     | Bravo        | 2            |
+| Feenstra  | Chinook      | 6            |
+| Elend     | Our Toy      | 8            |
+| Elend     | Our Toy      | 3            |
+| Juarez    | Gypsy        | 8            |
+| Smeltz    | Listy        | 2            |
+| Feenstra  | Chinook      | 5            |
+| Trent     | Karvel       | 7            |
+| Blake     | Mermaid      | N/A          |
+| Norton    | Axxon II     | N/A          |
++-----------+--------------+--------------+
+17 rows in set (0.00 sec)
+
+mysql> use henry_books;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select book.book_code, book.title
+    -> from book
+    -> where book.price > ANY
+    -> (select book.type from book where book.type = 'HOR');
++-----------+------------------------------------------+
+| book_code | title                                    |
++-----------+------------------------------------------+
+| 0180      | A Deepness in the Sky                    |
+| 0189      | Magic Terror                             |
+| 0200      | The Stranger                             |
+| 0378      | Venice                                   |
+| 079X      | Second Wind                              |
+| 0808      | The Edge                                 |
+| 1351      | Dreamcatcher: A Novel                    |
+| 1382      | Treasure Chests                          |
+| 138X      | Beloved                                  |
+| 2226      | Harry Potter and the Prisoner of Azkaban |
+| 2281      | Van Gogh and Gauguin                     |
+| 2766      | Of Mice and Men                          |
+| 2908      | Electric Light                           |
+| 3350      | Group: Six People in Search of a Life    |
+| 3743      | Nine Stories                             |
+| 3906      | The Soul of a New Machine                |
+| 5163      | Travels with Charley                     |
+| 5790      | Catch-22                                 |
+| 6128      | Jazz                                     |
+| 6328      | Band of Brothers                         |
+| 669X      | A Guide to SQL                           |
+| 6908      | Franny and Zooey                         |
+| 7405      | East of Eden                             |
+| 7443      | Harry Potter and the Goblet of Fire      |
+| 7559      | The Fall                                 |
+| 8092      | Godel, Escher, Bach                      |
+| 8720      | When Rabbit Howls                        |
+| 9611      | Black House                              |
+| 9627      | Song of Solomon                          |
+| 9701      | The Grapes of Wrath                      |
+| 9882      | Slay Ride                                |
+| 9883      | The Catcher in the Rye                   |
+| 9931      | To Kill a Mockingbird                    |
++-----------+------------------------------------------+
+33 rows in set (0.00 sec)
+
+mysql> select book.book_code, book.title
+    -> from book
+    -> where book.price > (book.type = 'HOR');
++-----------+------------------------------------------+
+| book_code | title                                    |
++-----------+------------------------------------------+
+| 0180      | A Deepness in the Sky                    |
+| 0189      | Magic Terror                             |
+| 0200      | The Stranger                             |
+| 0378      | Venice                                   |
+| 079X      | Second Wind                              |
+| 0808      | The Edge                                 |
+| 1351      | Dreamcatcher: A Novel                    |
+| 1382      | Treasure Chests                          |
+| 138X      | Beloved                                  |
+| 2226      | Harry Potter and the Prisoner of Azkaban |
+| 2281      | Van Gogh and Gauguin                     |
+| 2766      | Of Mice and Men                          |
+| 2908      | Electric Light                           |
+| 3350      | Group: Six People in Search of a Life    |
+| 3743      | Nine Stories                             |
+| 3906      | The Soul of a New Machine                |
+| 5163      | Travels with Charley                     |
+| 5790      | Catch-22                                 |
+| 6128      | Jazz                                     |
+| 6328      | Band of Brothers                         |
+| 669X      | A Guide to SQL                           |
+| 6908      | Franny and Zooey                         |
+| 7405      | East of Eden                             |
+| 7443      | Harry Potter and the Goblet of Fire      |
+| 7559      | The Fall                                 |
+| 8092      | Godel, Escher, Bach                      |
+| 8720      | When Rabbit Howls                        |
+| 9611      | Black House                              |
+| 9627      | Song of Solomon                          |
+| 9701      | The Grapes of Wrath                      |
+| 9882      | Slay Ride                                |
+| 9883      | The Catcher in the Rye                   |
+| 9931      | To Kill a Mockingbird                    |
++-----------+------------------------------------------+
+33 rows in set (0.00 sec)
+
+mysql> use generic_company;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT 
+    ->  CONCAT(EMP.first_name, ", ", EMP.last_name) as Employee,
+    ->  EMP.employee_num as "Employee Number",
+    ->  CONCAT(MGR.first_name, ", ", MGR.last_name) as Manager,
+    ->  EMP.MGR_employee_num as "Manager Number"
+    -> FROM Employee as EMP
+    ->   join Employee as MGR on EMP.MGR_employee_num = MGR.employee_num;
++------------------+-----------------+----------------+----------------+
+| Employee         | Employee Number | Manager        | Manager Number |
++------------------+-----------------+----------------+----------------+
+| Mona, Canzler    |             198 | Martin, Holden |            108 |
+| Joan, Dykstra    |             206 | Mona, Canzler  |            198 |
+| Steven, Murray   |             255 | Benito, Galvez |            301 |
+| Benito, Galvez   |             301 | Martin, Holden |            108 |
+| Beth, Peterman   |             366 | Mona, Canzler  |            198 |
+| Matt, Traynor    |             391 | Benito, Galvez |            301 |
+| Ashton, Brent    |             402 | Benito, Galvez |            301 |
+| Alyssa, Scholten |             466 | Martin, Holden |            108 |
+| Morgan, Wiltzer  |             551 | Mona, Canzler  |            198 |
++------------------+-----------------+----------------+----------------+
+9 rows in set (0.00 sec)
+
+mysql> exit
